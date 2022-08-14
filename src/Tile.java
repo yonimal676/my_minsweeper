@@ -13,14 +13,10 @@ public class Tile
         is_picked = false;
         is_bomb = false;
         num_of_bombs_around = 0;
-        str = "?  ";
+
         mode = -1;
-        setStr(is_picked, mode);
+        str = "?  ";
     }
-
-
-
-
 
     public int getMode() {return mode;}
     public void setMode(int mode) {this.mode = mode;}
@@ -35,26 +31,12 @@ public class Tile
     public void setNum_of_bombs_around(int num_of_bombs_around) {this.num_of_bombs_around = num_of_bombs_around;}
 
     public String getStr() {return str;}
+    public void setStr(String str) {this.str = str;}
 
-    public void setStr(boolean is_picked, int mode)
-    {
-      if (is_picked)
-      {
-          switch (mode)
-          {
-              case -2:
-                  this.str = Game.COLOR_RED_BOLD + "X  " + Game.COLOR_RESET;
-                  break;
 
-              case 0:
-                  this.str =  "?  " ;
-                  break;
 
-              default:
-                  this.str = Game.COLOR_GREEN + "0  " + Game.COLOR_RESET;
-                  break;
-          }
 
-      }
-    }
+
+
+
 }
