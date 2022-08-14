@@ -27,8 +27,10 @@ public class Board
             System.out.println(Game.COLOR_CYAN +"\n\nWELCOME TO MINESWEEPER!\n" + Game.COLOR_RESET);
 
 
-            System.out.println("What size should the board be? ");
+            System.out.println("What size should the board be? (max: 50)");
             boardSize = scanner.nextInt();
+            if ( boardSize > 50 )
+                is_playing = false;
             
             System.out.println("And how many bombs? ");
             bombAmount = scanner.nextInt();
@@ -53,26 +55,19 @@ public class Board
                 for (int j = 1; j < i; j++)
                     if (bombLocations[j] == bombLocations[i])
                         bombLocations[j]++;
+            // imperfect
+            /** randomize bomb locations. */
 
 
-            for (int i = 0; i < bombLocations.length; i++)
+            for (int i: bombLocations)
             {
-                // show
-
-                xB = bombLocations[i] / 10;
-                yB = bombLocations[i] % 10;
-
-                tileBoard[yB][xB].setMode(-2);
-
+                System.out.print(i + "  ");//
+                tileBoard[i /10][i %10].setIs_bomb(true);
             }
-
-
-
 
 
             num_of_turns = 0;
             num_of_turns_to_win = (boardSize * boardSize) - bombAmount;
-
 
 
 
@@ -102,19 +97,31 @@ public class Board
 
 
 
-
-
-
-
-
-
-
-
                 System.out.print("\nEnter coordinates (x/y): ");
                 coords = scanner.nextInt();
 
+
                 x = coords / 10;
                 y = coords % 10;
+
+
+
+                tileBoard[x][y].setIs_picked(true);
+                tileBoard[x][y].setMode(-2);
+
+
+
+                System.out.println("str "+ tileBoard[x][y].getStr());
+                System.out.println("mode "+ tileBoard[x][y].getMode());
+                System.out.println("is_picked "+ tileBoard[x][y].getIs_picked());
+
+
+
+                if ( coords >= 100 || coords <= 9 || x > boardSize || y > boardSize)
+                {
+                    System.out.println("invalid input.");
+                    is_playing = false;
+                }
 
 
 
