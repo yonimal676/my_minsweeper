@@ -7,10 +7,8 @@ public class Board
     int boardSize;
     int bombAmount;
 
-    int coords; // temporary number of coordinates from user.
     int x, y; // coordinates of the tile that's been picked.
 
-    int[] bombLocations; // hmm..
     int xB, yB; // coords of bomb.
 
     private int num_of_turns;
@@ -93,6 +91,8 @@ public class Board
             System.out.print("Enter Y coordinate: ");
             y = scanner.nextInt();
 
+
+
             if (x > boardSize || x <= 0 || y > boardSize || y <= 0 )
             {
                 System.out.println(Game.bold_redTXT("Invalid input.\nThere's no tile with such coordinates."));
@@ -101,8 +101,14 @@ public class Board
 
             num_of_turns++;
 
+            if (num_of_turns >= num_of_turns_to_win)
+                endGame();
+
+
 
             revealTile (x, y);
+
+
 
 
         }while (is_playing) ;
@@ -136,7 +142,7 @@ public void revealTile (int x, int y)
 public void print(int x, int y)
 {
     if (tileBoard[y][x].getIsBomb())
-        lost(x,y);
+        endGame();
 
     else
     {
@@ -151,6 +157,95 @@ public void print(int x, int y)
 
             case 0:
                 tileBoard[y][x].setStr(Game.greenTXT("0  "));
+
+
+                if (y < boardSize) {
+                    tileBoard[y + 1][x].setIs_picked(true);
+                    tileBoard[y + 1][x].setNum_of_bombs_around(checkNearBombs(x, y));
+                    tileBoard[y + 1][x].setMode(tileBoard[y + 1][x].getNum_of_bombs_around());
+
+                    if (tileBoard[y + 1][x].getMode() == 0) {
+                        tileBoard[y + 1][x].setStr(Game.greenTXT(tileBoard[y + 1][x].getMode() + "  "));
+//                        revealTile(x ,y + 1);
+                    }
+                }
+                if (y > 1) {
+                    tileBoard[y - 1][x].setIs_picked(true);
+                    tileBoard[y - 1][x].setNum_of_bombs_around(checkNearBombs(x, y));
+                    tileBoard[y - 1][x].setMode(tileBoard[y - 1][x].getNum_of_bombs_around());
+                    tileBoard[y - 1][x].setStr( tileBoard[y - 1][x].getMode()+ "  ");
+
+                    if (tileBoard[y - 1][x].getMode() == 0) {
+                        tileBoard[y - 1][x].setStr(Game.greenTXT(tileBoard[y - 1][x].getMode() + "  "));
+//                        revealTile(x ,y - 1);
+                    }
+                }
+                if (x > 1) {
+                    tileBoard[y][x - 1].setIs_picked(true);
+                    tileBoard[y][x - 1].setNum_of_bombs_around(checkNearBombs(x, y));
+                    tileBoard[y][x - 1].setMode(tileBoard[y][x - 1].getNum_of_bombs_around());
+                    tileBoard[y][x - 1].setStr( tileBoard[y][x - 1].getMode()+ "  ");
+
+                    if (tileBoard[y][x - 1].getMode() == 0) {
+                        tileBoard[y][x - 1].setStr(Game.greenTXT(tileBoard[y][x - 1].getMode() + "  "));
+//                        revealTile(x - 1,y);
+                    }
+                }
+                if (x < boardSize) {
+                    tileBoard[y][x + 1].setIs_picked(true);
+                    tileBoard[y][x + 1].setNum_of_bombs_around(checkNearBombs(x, y));
+                    tileBoard[y][x + 1].setMode(tileBoard[y][x + 1].getNum_of_bombs_around());
+                    tileBoard[y][x + 1].setStr( tileBoard[y][x + 1].getMode()+ "  ");
+
+                    if (tileBoard[y][x + 1].getMode() == 0) {
+                        tileBoard[y][x + 1].setStr(Game.greenTXT(tileBoard[y][x + 1].getMode() + "  "));
+//                        revealTile(x + 1 ,y);
+                    }
+                }
+                if (x < boardSize && y < boardSize) {
+                    tileBoard[y + 1][x + 1].setIs_picked(true);
+                    tileBoard[y + 1][x + 1].setNum_of_bombs_around(checkNearBombs(x, y));
+                    tileBoard[y + 1][x + 1].setMode(tileBoard[y + 1][x + 1].getNum_of_bombs_around());
+                    tileBoard[y + 1][x + 1].setStr( tileBoard[y + 1][x + 1].getMode()+ "  ");
+
+                    if (tileBoard[y + 1][x + 1].getMode() == 0) {
+                        tileBoard[y + 1][x + 1].setStr(Game.greenTXT(tileBoard[y + 1][x + 1].getMode() + "  "));
+//                        revealTile(x  + 1,y + 1);
+                    }
+                }
+                if (x > 1 && y > 1) {
+                    tileBoard[y - 1][x - 1].setIs_picked(true);
+                    tileBoard[y - 1][x - 1].setNum_of_bombs_around(checkNearBombs(x, y));
+                    tileBoard[y - 1][x - 1].setMode(tileBoard[y - 1][x - 1].getNum_of_bombs_around());
+                    tileBoard[y - 1][x - 1].setStr( tileBoard[y - 1][x - 1].getMode()+ "  ");
+
+                    if (tileBoard[y - 1][x - 1].getMode() == 0) {
+                        tileBoard[y - 1][x - 1].setStr(Game.greenTXT(tileBoard[y - 1][x - 1].getMode() + "  "));
+//                        revealTile(x - 1 ,y  - 1);
+                    }
+                }
+                if (x > 1 && y < boardSize) {
+                    tileBoard[y + 1][x - 1].setIs_picked(true);
+                    tileBoard[y + 1][x - 1].setNum_of_bombs_around(checkNearBombs(x, y));
+                    tileBoard[y + 1][x - 1].setMode(tileBoard[y + 1][x - 1].getNum_of_bombs_around());
+                    tileBoard[y + 1][x - 1].setStr( tileBoard[y + 1][x - 1].getMode()+ "  ");
+
+                    if (tileBoard[y + 1][x - 1].getMode() == 0) {
+                        tileBoard[y + 1][x - 1].setStr(Game.greenTXT(tileBoard[y + 1][x - 1].getMode() + "  "));
+//                        revealTile(x - 1 ,y + 1);
+                    }
+                }
+                if (x < boardSize && y > 1) {
+                    tileBoard[y - 1][x + 1].setIs_picked(true);
+                    tileBoard[y - 1][x + 1].setNum_of_bombs_around(checkNearBombs(x, y));
+                    tileBoard[y - 1][x + 1].setMode(tileBoard[y - 1][x + 1].getNum_of_bombs_around());
+                    tileBoard[y - 1][x + 1].setStr( tileBoard[y - 1][x + 1].getMode()+ "  ");
+
+                    if (tileBoard[y - 1][x + 1].getMode() == 0) {
+                        tileBoard[y - 1][x + 1].setStr(Game.greenTXT(tileBoard[y - 1][x + 1].getMode() + "  "));
+//                        revealTile(x + 1,y - 1);
+                    }
+                }
                 break;
             case 1:
                 tileBoard[y][x].setStr(Game.greenTXT("1  "));
@@ -183,21 +278,30 @@ public void print(int x, int y)
 
 
 
-public void lost (int x, int y)
+public void endGame ()
 {
     is_playing = false;
+
+    boolean wonOrLost = true; // won
 
     for (int i = 1; i < tileBoard.length; i++) {
         for (int j = 1; j < tileBoard[i].length; j++) {
             if (tileBoard[i][j].getIsBomb())
+            {
                 System.out.print(Game.bold_redTXT("X  "));
+                wonOrLost = false; // lost
+            }
             else
                 System.out.print(tileBoard[i][j].getStr());
         }
         System.out.println();
     }
 
-    System.out.println(Game.cyanTXT("\nYou lost in "+ num_of_turns +" turns."));
+    if (wonOrLost)
+        System.out.println(Game.cyanTXT("congratulations, you won!!"));
+
+    else
+        System.out.println(Game.cyanTXT("\nYou lost in "+ num_of_turns +" turns."));
 }
 
 
