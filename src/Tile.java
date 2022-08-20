@@ -6,7 +6,6 @@ public class Tile
     private String str;
     private int mode;
 
-
     public Tile ()
     {
 
@@ -32,10 +31,6 @@ public class Tile
 
     public String getStr() {return str;}
     public void setStr(String str) {this.str = str;}
-
-
-
-
 
 
 
