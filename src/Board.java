@@ -13,6 +13,8 @@ public class Board
 
     private int num_of_turns;
     private int num_of_turns_to_win;
+    private int how_many_previously_picked;
+    private int how_many_picked;
 
     private boolean is_playing; // false if picked bomb.
 
@@ -31,16 +33,16 @@ public class Board
 
         tileBoard = new Tile [boardSize + 1] [boardSize + 1];
 
-
         for (int i = 1; i < tileBoard.length; i++)
             for (int j = 1; j < tileBoard[i].length; j++)
                 tileBoard[i][j] = new Tile();
         /** construct the tiles */
 
 
-
         randomizeBombLocations();
         num_of_turns = 0;
+        how_many_picked = 0;
+        how_many_previously_picked = 0;
         num_of_turns_to_win = (boardSize * boardSize) - bombAmount;
 
 
@@ -50,7 +52,7 @@ public class Board
                     tileBoard[i][j].setMode(-2);
 
 
-        if ( boardSize <= 50 && boardSize >= 8 ) // because how are you even gonna play with more than 2500 tiles?
+        if ( boardSize <= 50 && boardSize >= 0 ) // because how are you even gonna play with more than 2500 tiles?
         {
             is_playing = true;
             play();
@@ -82,11 +84,27 @@ public class Board
                 is_playing = false;
             }
 
+
+
             num_of_turns++;
-            if (num_of_turns >= num_of_turns_to_win)
-                endGame();
+
+
+            for (int i = 1; i <= boardSize; i++)
+                for (int j = 1; j <= boardSize; j++)
+                    if (tileBoard[i][j].getIs_picked())
+                        how_many_previously_picked++;
 
             revealTile (x, y);
+
+
+            for (int i = 1; i <= boardSize; i++)
+                for (int j = 1; j <= boardSize; j++)
+                    if (tileBoard[i][j].getIs_picked())
+                        how_many_picked++;
+
+            if (how_many_picked - how_many_previously_picked >= num_of_turns_to_win)
+                endGame(true);
+
 
         }while (is_playing) ;
     }
@@ -100,6 +118,7 @@ public class Board
             xB = (int) (Math.random() * boardSize + 1); // 1-boardSize
             yB = (int) (Math.random() * boardSize + 1); // 1-boardSize
 
+            System.out.println("x: " + xB + "  y: " + yB);
             tileBoard[yB][xB].setIs_bomb(true);
         }
     }
@@ -109,7 +128,7 @@ public void revealTile (int x, int y)
     tileBoard[y][x].setIs_picked(true);
 
     if (tileBoard[y][x].getIsBomb())
-        endGame();
+        endGame(false);
 
     else // = not a bomb
         print(x,y);
@@ -130,28 +149,28 @@ public void print(int x, int y)
         case 0:
             tileBoard[y][x].setStr(Game.greenTXT("0  "));
 
-            if (y < boardSize)
+            if (y != boardSize)
                 revealNear(x, y + 1);
 
-            if (y > 1)
+            if (y != 1)
                 revealNear(x, y - 1);
 
-            if (x < boardSize)
+            if (x != boardSize)
                 revealNear(x + 1, y);
 
-            if (x > 1)
+            if (x != 1)
                 revealNear(x - 1, y);
 
-            if (x < boardSize && y < boardSize)
+            if (x != boardSize && y != boardSize)
                 revealNear(x + 1, y + 1);
 
-            if (x > 1 && y > 1)
+            if (x != 1 && y != 1)
                 revealNear(x - 1, y - 1);
 
-            if (x > 1 && y < boardSize)
+            if (x != 1 && y != boardSize)
                 revealNear(x - 1, y + 1);
 
-            if (x < boardSize && y > 1)
+            if (x != boardSize && y != 1)
                 revealNear(x + 1, y - 1);
 
                 break;
@@ -186,23 +205,18 @@ public void revealNear (int x, int y)
 }
 
 
-
-public void endGame ()
+public void endGame (boolean wonOrLost) // true = won
 {
     is_playing = false;
 
-    boolean wonOrLost = true; // won
 
     for (int i = 1; i < tileBoard.length; i++) {
-        for (int j = 1; j < tileBoard[i].length; j++) {
+        for (int j = 1; j < tileBoard[i].length; j++)
             if (tileBoard[i][j].getIsBomb())
-            {
                 System.out.print(Game.bold_redTXT("X  "));
-                wonOrLost = false; // lost
-            }
             else
                 System.out.print(tileBoard[i][j].getStr());
-        }
+
         System.out.println();
     }
 
@@ -218,35 +232,35 @@ public int checkNearBombs (int x, int y)
 {
     int num = 0;
 
-    if (x < boardSize)
+    if (x != boardSize)
         if (tileBoard[y][x + 1].getIsBomb())
             num++;
 
-    if (x > 1)
+    if (x != 1)
         if (tileBoard[y][x - 1].getIsBomb())
             num++;
 
-    if (y > 1)
+    if (y != 1)
         if (tileBoard[y - 1][x].getIsBomb())
         num++;
 
-    if (y < boardSize)
+    if (y != boardSize)
         if (tileBoard[y + 1][x].getIsBomb())
             num++;
 
-    if (y < boardSize && x < boardSize)
+    if (y != boardSize && x != boardSize)
         if (tileBoard[y + 1][x + 1].getIsBomb())
             num++;
 
-    if (y > 1 && x < boardSize)
+    if (y != 1 && x != boardSize)
         if (tileBoard[y - 1][x + 1].getIsBomb())
             num++;
 
-    if (y > 1 && x > 1)
+    if (y != 1 && x != 1)
         if (tileBoard[y - 1][x - 1].getIsBomb())
             num++;
 
-    if ( y < boardSize && x > 1)
+    if ( y != boardSize && x != 1)
         if (tileBoard[y + 1][x - 1].getIsBomb())
             num++;
 
