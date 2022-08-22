@@ -12,11 +12,6 @@ public class Game
     public static void main(String[] args)
     {
         Board board = new Board();
-
-
-
-
-
     }
 
 
@@ -25,7 +20,4 @@ public class Game
     public static String cyanTXT (String str) {return "\u001B[36m" +str+ "\u001B[0m";}
     public static String yellowTXT (String str) {return "\u001B[33m" +str+ "\u001B[0m";}
     public static String redTXT (String str) {return "\u001B[31m" +str+ "\u001B[0m";}
-
-
-
 }

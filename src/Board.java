@@ -23,7 +23,7 @@ public class Board
     {
         System.out.println(Game.cyanTXT("\n\nWELCOME TO MINESWEEPER!\n"));
 
-        System.out.println("What size should the board be? (max: 50)");
+        System.out.println("What size should the board be? (min: 8, max: 50)");
         boardSize = scanner.nextInt();
         System.out.println("And how many bombs? ");
         bombAmount = scanner.nextInt();
@@ -50,7 +50,7 @@ public class Board
                     tileBoard[i][j].setMode(-2);
 
 
-        if ( boardSize <= 50 ) // because how are you even gonna play with more than 2500 tiles?
+        if ( boardSize <= 50 && boardSize >= 8 ) // because how are you even gonna play with more than 2500 tiles?
         {
             is_playing = true;
             play();
@@ -78,7 +78,7 @@ public class Board
 
             if (x > boardSize || x <= 0 || y > boardSize || y <= 0 )
             {
-                System.out.println(Game.bold_redTXT("Invalid input.\nThere's no tile with such coordinates."));
+                System.out.println(Game.bold_redTXT("Invalid input.\nThere's no tile with such coordinates.\n\n"));
                 is_playing = false;
             }
 
@@ -100,7 +100,6 @@ public class Board
             xB = (int) (Math.random() * boardSize + 1); // 1-boardSize
             yB = (int) (Math.random() * boardSize + 1); // 1-boardSize
 
-            System.out.println("x: "+xB +"  y:"+ yB);/*********************************** delete this line*/
             tileBoard[yB][xB].setIs_bomb(true);
         }
     }
@@ -108,74 +107,73 @@ public class Board
 public void revealTile (int x, int y)
 {
     tileBoard[y][x].setIs_picked(true);
-    print(x,y);
+
+    if (tileBoard[y][x].getIsBomb())
+        endGame();
+
+    else // = not a bomb
+        print(x,y);
 }
 
 public void print(int x, int y)
 {
-    if (tileBoard[y][x].getIsBomb())
-        endGame();
 
-    else // not a bomb
+    tileBoard[y][x].setNum_of_bombs_around(checkNearBombs(x, y));
+    tileBoard[y][x].setMode(tileBoard[y][x].getNum_of_bombs_around());
+
+    switch (tileBoard[y][x].getMode())
     {
-        tileBoard[y][x].setNum_of_bombs_around(checkNearBombs(x, y));
-        tileBoard[y][x].setMode(tileBoard[y][x].getNum_of_bombs_around());
+        case -2:
+            tileBoard[y][x].setStr(Game.bold_redTXT("X  "));
+            break;
 
+        case 0:
+            tileBoard[y][x].setStr(Game.greenTXT("0  "));
 
-        switch (tileBoard[y][x].getMode())
-        {
-            case -2:
-                tileBoard[y][x].setStr(Game.bold_redTXT("X  "));
+            if (y < boardSize)
+                revealNear(x, y + 1);
+
+            if (y > 1)
+                revealNear(x, y - 1);
+
+            if (x < boardSize)
+                revealNear(x + 1, y);
+
+            if (x > 1)
+                revealNear(x - 1, y);
+
+            if (x < boardSize && y < boardSize)
+                revealNear(x + 1, y + 1);
+
+            if (x > 1 && y > 1)
+                revealNear(x - 1, y - 1);
+
+            if (x > 1 && y < boardSize)
+                revealNear(x - 1, y + 1);
+
+            if (x < boardSize && y > 1)
+                revealNear(x + 1, y - 1);
+
                 break;
+        case 1: tileBoard[y][x].setStr(Game.greenTXT("1  "));
+            break;
+        case 2: tileBoard[y][x].setStr(Game.yellowTXT("2  "));
+            break;
+        case 3: tileBoard[y][x].setStr(Game.redTXT("3  "));
+            break;
+        case 4: tileBoard[y][x].setStr(Game.redTXT("4  "));
+            break;
+        case 5: tileBoard[y][x].setStr(Game.redTXT("5  "));
+            break;
+        case 6: tileBoard[y][x].setStr(Game.redTXT("6  "));
+            break;
+        case 7: tileBoard[y][x].setStr(Game.redTXT("7  "));
+            break;
+        case 8: tileBoard[y][x].setStr(Game.redTXT("8  "));
+            break;
 
-            case 0:
-                tileBoard[y][x].setStr(Game.greenTXT("0  "));
-
-                if (y < boardSize)
-                    revealNear(x, y + 1);
-
-                if (y > 1)
-                    revealNear(x, y - 1);
-
-                if (x < boardSize)
-                    revealNear(x + 1, y);
-
-                if (x > 1)
-                    revealNear(x - 1, y);
-
-
-                if (x < boardSize && y < boardSize)
-                    revealNear(x + 1, y + 1);
-
-                if (x > 1 && y > 1)
-                    revealNear(x - 1, y - 1);
-
-                if (x > 1 && y < boardSize)
-                    revealNear(x - 1, y + 1);
-
-                if (x < boardSize && y > 1)
-                    revealNear(x + 1, y - 1);
-
-                    break;
-            case 1: tileBoard[y][x].setStr(Game.greenTXT("1  "));
-                break;
-            case 2: tileBoard[y][x].setStr(Game.yellowTXT("2  "));
-                break;
-            case 3: tileBoard[y][x].setStr(Game.redTXT("3  "));
-                break;
-            case 4: tileBoard[y][x].setStr(Game.redTXT("4  "));
-                break;
-            case 5: tileBoard[y][x].setStr(Game.redTXT("5  "));
-                break;
-            case 6: tileBoard[y][x].setStr(Game.redTXT("6  "));
-                break;
-            case 7: tileBoard[y][x].setStr(Game.redTXT("7  "));
-                break;
-            case 8: tileBoard[y][x].setStr(Game.redTXT("8  "));
-                break;
-
-        }
     }
+
 }
 
 
@@ -185,11 +183,6 @@ public void revealNear (int x, int y)
     tileBoard[y][x].setNum_of_bombs_around(checkNearBombs(x, y));
     tileBoard[y][x].setMode(tileBoard[y][x].getNum_of_bombs_around());
     tileBoard[y][x].setStr(Game.greenTXT(tileBoard[y][x].getMode() + "  "));
-
-    /*if (tileBoard[y][x].getMode() == 0)
-//        print(x,y);
-        System.out.println("yes"); ///         TRY SOMTHING THAT WILL CLEAR ALL SURROUNDING ZEROS LIKE THIS.
-*/
 }
 
 
@@ -225,39 +218,37 @@ public int checkNearBombs (int x, int y)
 {
     int num = 0;
 
-
-    if (x != boardSize)
+    if (x < boardSize)
         if (tileBoard[y][x + 1].getIsBomb())
             num++;
 
-    if (x != 1)
+    if (x > 1)
         if (tileBoard[y][x - 1].getIsBomb())
             num++;
 
-    if (y != 1)
+    if (y > 1)
         if (tileBoard[y - 1][x].getIsBomb())
         num++;
 
-    if (y != boardSize)
+    if (y < boardSize)
         if (tileBoard[y + 1][x].getIsBomb())
             num++;
 
-    if (y != boardSize && x != boardSize)
+    if (y < boardSize && x < boardSize)
         if (tileBoard[y + 1][x + 1].getIsBomb())
             num++;
 
-    if (y != 1 && x != boardSize)
+    if (y > 1 && x < boardSize)
         if (tileBoard[y - 1][x + 1].getIsBomb())
             num++;
 
-    if (y != 1 && x != 1)
+    if (y > 1 && x > 1)
         if (tileBoard[y - 1][x - 1].getIsBomb())
             num++;
 
-    if ( y != boardSize && x != 1)
+    if ( y < boardSize && x > 1)
         if (tileBoard[y + 1][x - 1].getIsBomb())
             num++;
-
 
     return num;
 }
