@@ -64,9 +64,26 @@ public class Board
         do { // similar to 'run()'
             System.out.println("\n\n");
 
-            for (int i = 1; i < tileBoard.length; i++) {
-                for (int j = 1; j < tileBoard[i].length; j++)
-                    System.out.print(tileBoard[i][j].getStr());
+            for (int i = 0; i < tileBoard.length; i++)
+            {
+                for (int j = 0; j < tileBoard[i].length; j++)
+                    if (i == 0 && j == 0)
+                        System.out.print(Game.greenBG("     "));
+                    else if (i == 0) {
+                        if (j <= 9)
+                            System.out.print(Game.greenBG(j + "  "));
+                        else
+                            System.out.print(Game.greenBG(j + " "));
+                    }
+                    else if (j == 0) {
+                        if (i <= 9)
+                            System.out.print(Game.greenBG(" " + i + " "));
+                        else
+                            System.out.print(Game.greenBG(" " + i ));
+                    }
+                    else
+                        System.out.print(tileBoard[i][j].getStr());
+                // end of inner loop
                 System.out.println();
             }
             /** print the tiles */
@@ -136,18 +153,17 @@ public void revealTile (int x, int y)
 
 public void print(int x, int y)
 {
-
     tileBoard[y][x].setNum_of_bombs_around(checkNearBombs(x, y));
     tileBoard[y][x].setMode(tileBoard[y][x].getNum_of_bombs_around());
 
     switch (tileBoard[y][x].getMode())
     {
         case -2:
-            tileBoard[y][x].setStr(Game.bold_redTXT("X  "));
+            tileBoard[y][x].setStr(Game.bold_redTXT("  X"));
             break;
 
         case 0:
-            tileBoard[y][x].setStr(Game.greenTXT("0  "));
+            tileBoard[y][x].setStr(Game.greenTXT("  0"));
 
             if (y != boardSize)
                 revealNear(x, y + 1);
@@ -174,21 +190,21 @@ public void print(int x, int y)
                 revealNear(x + 1, y - 1);
 
                 break;
-        case 1: tileBoard[y][x].setStr(Game.greenTXT("1  "));
+        case 1: tileBoard[y][x].setStr(Game.greenTXT("  1"));
             break;
-        case 2: tileBoard[y][x].setStr(Game.yellowTXT("2  "));
+        case 2: tileBoard[y][x].setStr(Game.yellowTXT("  2"));
             break;
-        case 3: tileBoard[y][x].setStr(Game.redTXT("3  "));
+        case 3: tileBoard[y][x].setStr(Game.redTXT("  3"));
             break;
-        case 4: tileBoard[y][x].setStr(Game.redTXT("4  "));
+        case 4: tileBoard[y][x].setStr(Game.redTXT("  4"));
             break;
-        case 5: tileBoard[y][x].setStr(Game.redTXT("5  "));
+        case 5: tileBoard[y][x].setStr(Game.redTXT("  5"));
             break;
-        case 6: tileBoard[y][x].setStr(Game.redTXT("6  "));
+        case 6: tileBoard[y][x].setStr(Game.redTXT("  6"));
             break;
-        case 7: tileBoard[y][x].setStr(Game.redTXT("7  "));
+        case 7: tileBoard[y][x].setStr(Game.redTXT("  7"));
             break;
-        case 8: tileBoard[y][x].setStr(Game.redTXT("8  "));
+        case 8: tileBoard[y][x].setStr(Game.redTXT("  8"));
             break;
 
     }
@@ -201,8 +217,51 @@ public void revealNear (int x, int y)
     tileBoard[y][x].setIs_picked(true);
     tileBoard[y][x].setNum_of_bombs_around(checkNearBombs(x, y));
     tileBoard[y][x].setMode(tileBoard[y][x].getNum_of_bombs_around());
-    tileBoard[y][x].setStr(Game.greenTXT(tileBoard[y][x].getMode() + "  "));
+    tileBoard[y][x].setStr(Game.greenTXT( "  "  + tileBoard[y][x].getMode() ));
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 public void endGame (boolean wonOrLost) // true = won
@@ -213,7 +272,7 @@ public void endGame (boolean wonOrLost) // true = won
     for (int i = 1; i < tileBoard.length; i++) {
         for (int j = 1; j < tileBoard[i].length; j++)
             if (tileBoard[i][j].getIsBomb())
-                System.out.print(Game.bold_redTXT("X  "));
+                System.out.print(Game.bold_redTXT("  X"));
             else
                 System.out.print(tileBoard[i][j].getStr());
 

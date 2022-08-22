@@ -14,7 +14,7 @@ public class Tile
         num_of_bombs_around = 0;
 
         mode = -1;
-        str = "?  ";
+        str = "  ?";
     }
 
     public int getMode() {return mode;}
